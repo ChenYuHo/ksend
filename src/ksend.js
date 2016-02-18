@@ -39,6 +39,7 @@ Ksend.prototype.getSmtpOpton = function () {
 
     switch (from.host){
         case 'smtp.qq.com':
+        case 'smtp.gmail.com':
             smtpOption.port = 465;
             smtpOption.secure = true;
             break;

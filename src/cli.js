@@ -15,7 +15,7 @@ var argv = optimist.argv;
 module.exports = function () {
 
     // 如果有设置项，设置之
-    if (argv.from || argv.to) {
+    if (argv.from || argv.to || argv.subject || argv.text ) {
 
         // 设置默认发送邮箱
         if (argv.from) {
@@ -26,6 +26,14 @@ module.exports = function () {
             var password = argv.from.split(':')[1];
             setConfig({from: from, password: password});
             console.log('设置默认发送邮箱成功，请将 ' + from + ' 添加至你的kindle已认可的发件人电子邮箱列表。');
+        }
+
+        if (argv.subject) {
+            setConfig({subject: argv.subject});
+        }
+
+        if (argv.text) {
+            setConfig({subject: argv.text});
         }
 
         //设置默认kindle接收邮箱
@@ -67,14 +75,14 @@ module.exports = function () {
         });
 
         console.log('正在推送:\n' + nameStr.join('\n') + '\n共' + attachments.length + '个文档到 ' + to + ' ，请耐心等待...');
-
         util.zip(attachments, function (error, zipAttachments) {
             if (error) {
                 return console.error('压缩文件失败：\n', error);
             }
             ksend.send({
                 to: to,
-                subject: 'convert',
+                subject: ksend.config.subject || "来自ksend",
+                text: ksend.config.text || "ksend 帮你快速发送文档到kindle" ,
                 attachments: zipAttachments
             }, function (error, info) {
                 removeTempFile(zipAttachments);
@@ -109,12 +117,11 @@ function showHelp() {
         '   or: ksend [--to mail]               设置默认接收邮箱 \n' +
         '\n' +
         'Options: \n' +
-        '   --from  设置默认发送邮箱和密码，邮箱地址和密码请用“:”分隔，格式如 abc@qq.com:123456 \n' +
-        '   --to    设置默认kindle接收邮箱\n' +
-        '   -m      设置当前kindle接收邮箱，推送时如果不带此参数，则使用默认接收邮箱\n' +
-        '   --help  显示帮助信息'
+        '   --from      设置默认发送邮箱和密码，邮箱地址和密码请用“:”分隔，格式如 abc@qq.com:123456 \n' +
+        '   --to        设置默认kindle接收邮箱\n' +
+        '   -m          设置当前kindle接收邮箱，推送时如果不带此参数，则使用默认接收邮箱\n' +
+        '   --subject   设置邮件主题\n' +
+        '   --text      设置邮件正文'+
+        '   --help      显示帮助信息'
     );
 }
-
-
-
