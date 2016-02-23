@@ -33,7 +33,7 @@ ksent
 
     ksent --text  '邮件正文'
 
-防止kindle 认为邮件里面没有附件..不能推送到kindle设备或者kindle阅读器
+*防止kindle 认为邮件里面没有附件..不能推送到kindle设备或者kindle阅读器*
         
 也可以同时推送多个文档：
 
